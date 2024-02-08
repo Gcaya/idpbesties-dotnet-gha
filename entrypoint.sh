@@ -83,10 +83,10 @@ cd_to_scaffold_directory() {
   fi
 }
 
-apply_cookiecutter_template() {
-  extra_context=$(prepare_cookiecutter_extra_context)
+apply_dotnet_template() {
+  # extra_context=$(prepare_cookiecutter_extra_context)
 
-  echo "🍪 Applying cookiecutter template $cookie_cutter_template with extra context $extra_context"
+  echo "🍪 Applying dotnet template $cookie_cutter_template with extra context"
   # Convert extra context from JSON to arguments
   args=()
   for key in $(echo "$extra_context" | jq -r 'keys[]'); do
@@ -95,15 +95,20 @@ apply_cookiecutter_template() {
 
   # Call cookiecutter with extra context arguments
 
-  echo "cookiecutter --no-input $cookie_cutter_template $args"
+  # echo "cookiecutter --no-input $cookie_cutter_template $args"
 
   # Call cookiecutter with extra context arguments
 
-  if [ -n "$template_directory" ]; then
-    cookiecutter --no-input $cookie_cutter_template --directory $template_directory "${args[@]}"
-  else
-    cookiecutter --no-input $cookie_cutter_template "${args[@]}"
-  fi
+  echo "$port_user_inputs"
+  send_log "$port_user_inputs"
+
+  dotnet new webapi -n maNewBestiesService
+
+  # if [ -n "$template_directory" ]; then
+  #   cookiecutter --no-input $cookie_cutter_template --directory $template_directory "${args[@]}"
+  # else
+  #   cookiecutter --no-input $cookie_cutter_template "${args[@]}"
+  # fi
 }
 
 
@@ -180,7 +185,7 @@ main() {
   fi
 
   send_log "Starting templating with cookiecutter 🍪"
-  apply_cookiecutter_template
+  apply_dotnet_template
   send_log "Pushing the template into the repository ⬆️"
   push_to_repository
 

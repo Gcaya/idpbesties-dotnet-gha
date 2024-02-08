@@ -1,13 +1,12 @@
 # Use the Alpine Linux base image
-FROM python:3.11-alpine
+FROM mcr.microsoft.com/dotnet/sdk:8.0
 
-RUN apk update && \
-    apk add --no-cache jq \
+RUN apt-get update && \
+    apt-get install -y jq \
     curl \ 
     git \
     openssh-client \
-    bash \
-    && pip3 install cookiecutter && pip3 install six
+    bash
 
 COPY *.sh /
 RUN chmod +x /*.sh
