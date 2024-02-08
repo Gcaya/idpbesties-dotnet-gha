@@ -99,16 +99,27 @@ apply_dotnet_template() {
 
   # Call cookiecutter with extra context arguments
 
-  echo "$port_user_inputs"
-  send_log "$port_user_inputs"
+  SERVICE_NAME=$(echo '{"service_name": "hello"}' | jq -r .service_name)
 
-  dotnet new webapi -n maNewBestiesService
+  dotnet new webapi -n $SERVICE_NAME
 
-  # if [ -n "$template_directory" ]; then
-  #   cookiecutter --no-input $cookie_cutter_template --directory $template_directory "${args[@]}"
-  # else
-  #   cookiecutter --no-input $cookie_cutter_template "${args[@]}"
-  # fi
+  cat << EOF
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
+WORKDIR /App
+
+# Copy everything
+COPY . ./
+# Restore as distinct layers
+RUN dotnet restore
+# Build and publish a release
+RUN dotnet publish -c Release -o out
+
+# Build runtime image
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
+WORKDIR /App
+COPY --from=build-env /App/out .
+ENTRYPOINT ["dotnet", "$SERVICE_NAME.dll"]
+EOF > Dockerfile
 }
 
 
