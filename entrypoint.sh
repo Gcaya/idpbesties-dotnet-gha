@@ -103,7 +103,7 @@ apply_dotnet_template() {
 
   dotnet new webapi -n $SERVICE_NAME
 
-  cat << EOF
+  cat <<EOF > Dockerfile
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
 WORKDIR /App
 
@@ -119,7 +119,9 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /App
 COPY --from=build-env /App/out .
 ENTRYPOINT ["dotnet", "$SERVICE_NAME.dll"]
-EOF > Dockerfile
+
+EOF
+
 }
 
 
