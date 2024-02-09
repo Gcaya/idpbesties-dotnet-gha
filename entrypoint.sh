@@ -103,6 +103,8 @@ apply_dotnet_template() {
 
   dotnet new webapi -n $SERVICE_NAME
 
+  touch Dockerfile
+
   cat <<EOF > Dockerfile
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
 WORKDIR /App
