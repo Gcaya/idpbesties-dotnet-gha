@@ -101,7 +101,7 @@ apply_dotnet_template() {
   touch readme.md
   touch Dockerfile
 
-  echo | ls -l
+  echo | ls -al
 
   cat <<EOF > Dockerfile
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
@@ -156,7 +156,7 @@ push_to_repository() {
       "$git_url/repos/$owner/$repo/pulls" | jq -r '.html_url')
 
     send_log "Opened a new PR in $pr_url 🚀"
-    add_link "$pr_url"
+    add_link "$pr_url"f
 
     else
       # cd "$(ls -td -- */ | head -n 1)"
