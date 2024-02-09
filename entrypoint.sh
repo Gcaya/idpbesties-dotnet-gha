@@ -126,49 +126,18 @@ EOF
 
 
 push_to_repository() {
-  if [ -n "$monorepo_url" ] && [ -n "$scaffold_directory" ]; then
+    cd "$(ls -td -- */ | head -n 1)"
+
+    echo | ls -al
+
+    git init
     git config user.name "GitHub Actions Bot"
     git config user.email "github-actions[bot]@users.noreply.github.com"
     git add .
-    git commit -m "Scaffolded project in $scaffold_directory"
-    git push -u origin $branch_name
-
-    send_log "Creating pull request to merge $branch_name into main 🚢"
-
-    owner=$(echo "$monorepo_url" | awk -F'/' '{print $4}')
-    repo=$(echo "$monorepo_url" | awk -F'/' '{print $5}')
-
-    echo "Owner: $owner"
-    echo "Repo: $repo"
-
-    PR_PAYLOAD=$(jq -n --arg title "Scaffolded project in $repo" --arg head "$branch_name" --arg base "main" '{
-      "title": $title,
-      "head": $head,
-      "base": $base
-    }')
-
-    echo "PR Payload: $PR_PAYLOAD"
-
-    pr_url=$(curl -X POST \
-      -H "Authorization: token $github_token" \
-      -H "Content-Type: application/json" \
-      -d "$PR_PAYLOAD" \
-      "$git_url/repos/$owner/$repo/pulls" | jq -r '.html_url')
-
-    send_log "Opened a new PR in $pr_url 🚀"
-    add_link "$pr_url"f
-
-    else
-      # cd "$(ls -td -- */ | head -n 1)"
-      git init
-      git config user.name "GitHub Actions Bot"
-      git config user.email "github-actions[bot]@users.noreply.github.com"
-      git add .
-      git commit -m "Initial commit after scaffolding"
-      git branch -M main
-      git remote add origin https://oauth2:$github_token@github.com/$org_name/$repository_name.git
-      git push -u origin main
-  fi
+    git commit -m "Initial commit after scaffolding"
+    git branch -M main
+    git remote add origin https://oauth2:$github_token@github.com/$org_name/$repository_name.git
+    git push -u origin main
 }
 
 
