@@ -93,18 +93,16 @@ apply_dotnet_template() {
       args+=("$key=$(echo "$extra_context" | jq -r ".$key")")
   done
 
-  # Call cookiecutter with extra context arguments
-
-  # echo "cookiecutter --no-input $cookie_cutter_template $args"
-
-  # Call cookiecutter with extra context arguments
-
   SERVICE_NAME=$(echo '{"service_name": "hello"}' | jq -r .service_name)
+
 
   dotnet new webapi -n $SERVICE_NAME
 
+  touch readme.md
   touch Dockerfile
 
+  ls -l
+  
   cat <<EOF > Dockerfile
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
 WORKDIR /App
