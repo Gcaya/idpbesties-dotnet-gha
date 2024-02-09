@@ -101,8 +101,8 @@ apply_dotnet_template() {
   touch readme.md
   touch Dockerfile
 
-  ls -l
-  
+  echo | ls -l
+
   cat <<EOF > Dockerfile
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
 WORKDIR /App
@@ -159,7 +159,7 @@ push_to_repository() {
     add_link "$pr_url"
 
     else
-      cd "$(ls -td -- */ | head -n 1)"
+      # cd "$(ls -td -- */ | head -n 1)"
       git init
       git config user.name "GitHub Actions Bot"
       git config user.email "github-actions[bot]@users.noreply.github.com"
