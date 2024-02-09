@@ -98,12 +98,11 @@ apply_dotnet_template() {
 
   dotnet new webapi -n $SERVICE_NAME
 
-  touch readme.md
-  touch Dockerfile
+  touch ./$SERVICE_NAME/readme.md
 
   echo | ls -al
 
-  cat <<EOF > Dockerfile
+  cat <<EOF > ./$SERVICE_NAME/Dockerfile
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
 WORKDIR /App
 
@@ -127,8 +126,6 @@ EOF
 
 push_to_repository() {
     cd "$(ls -td -- */ | head -n 1)"
-
-    echo | ls -al
 
     git init
     git config user.name "GitHub Actions Bot"
